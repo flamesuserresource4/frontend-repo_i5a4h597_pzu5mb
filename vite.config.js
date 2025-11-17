@@ -1,16 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Simplified Vite config to ensure external preview works reliably
-// - Enables host binding for external access
-// - Removes restrictive allowedHosts and disables custom HMR/watch flags
-// - Keeps defaults for optimizeDeps
+// Vite config for external preview access
+// - host: true => bind 0.0.0.0
+// - strictPort: true => always use 3000
+// - cors: true => allow cross-origin during dev
+// - allowedHosts: 'all' => accept reverse-proxied hostnames (e.g., *.modal.host)
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    host: true, // 0.0.0.0 and proper external exposure
+    host: true,
     strictPort: true,
-    cors: true
+    cors: true,
+    allowedHosts: 'all'
   }
 })
