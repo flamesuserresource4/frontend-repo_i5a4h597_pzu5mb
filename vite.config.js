@@ -5,20 +5,21 @@ import react from '@vitejs/plugin-react'
 // - Bind to 0.0.0.0
 // - Keep strict port 3000
 // - Enable CORS
-// - Explicitly allow the current external hostname
-const ALLOWED = [
-  'localhost',
-  '127.0.0.1',
-  'ta-01ka7zbmtfdx99yvzdm16teftd-3000.wo-7yqm22npnmpiwr8zaphiyd8j0.w.modal.host'
-]
-
+// - Disable host check (some reverse proxies rewrite Host header)
+// - Configure HMR to use WSS on port 443 through the proxy
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    host: true,
+    host: '0.0.0.0',
     strictPort: true,
     cors: true,
-    allowedHosts: ALLOWED
-  }
+    // Disable Vite's host check so the reverse proxy hostname is accepted
+    allowedHosts: true,
+    // Ensure HMR works over HTTPS reverse proxy
+    hmr: {
+      clientPort: 443,
+      protocol: 'wss',
+    },
+  },
 })
